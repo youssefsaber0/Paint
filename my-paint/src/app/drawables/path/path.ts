@@ -5,17 +5,21 @@ export class path implements drawable{
     type="path";
     points!: point[];
     StartingPoint:point;
+    //make new point and set start 
     constructor(x:number,y:number){
         this.points=[];
         this.points[0]=new point(x,y);
         this.StartingPoint=this.points[0];
     }
+    //add new point after click
     AddPoint(x:number,y:number){
         this.points.push(new point(x,y));
     }
+    //return that random shape
     getPath(){
         return this.points;
     }
+    
     Contains(x:number,y:number,tolerance:number){
             var p:point;
             for(var i=0;i<this.points.length;i++){
