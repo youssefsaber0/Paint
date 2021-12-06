@@ -17,3 +17,11 @@
 input:hover{
     background-color: darkgreen;
 }
+.size {
+
+    overflow:scroll;
+    left: 200px; 
+    height: 70px; 
+    background-color: rgb(42, 165, 165); 
+    font-size:15px;
+  }
