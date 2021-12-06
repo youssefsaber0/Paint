@@ -70,12 +70,12 @@ export class rectangle implements IShape{
             }
         }
         if(Math.abs(b-this.y)<=this.lineWidth/2+tolerance){
-            if(a<=Math.max(this.x,this.m)&&b>=Math.min(this.x,this.m)){
+            if(a<=Math.max(this.x,this.m)&&a>=Math.min(this.x,this.m)){
                 return 1;
             }
         }
         if(Math.abs(b-this.n)<=this.lineWidth/2+tolerance){
-            if(a<=Math.max(this.x,this.m)&&b>=Math.min(this.x,this.m)){
+            if(a<=Math.max(this.x,this.m)&&a>=Math.min(this.x,this.m)){
                 return 3;
             }
         }
@@ -114,8 +114,10 @@ export class rectangle implements IShape{
     lineWidth: number;
   
     Contains(a: number, b: number,tolerance:number): boolean {
-        if(a<=Math.max(this.m,this.x)+this.lineWidth/2&&a>=Math.min(this.x,this.m)-this.lineWidth/2&&b<=Math.max(this.n,this.y)+this.lineWidth/2&&b>=Math.min(this.n,this.y)-this.lineWidth/2){
+        if(a<=Math.max(this.m,this.x)+this.lineWidth/2+tolerance&&a>=Math.min(this.x,this.m)-this.lineWidth/2-tolerance&&b<=Math.max(this.n,this.y)+this.lineWidth/2+tolerance&&b>=Math.min(this.n,this.y)-this.lineWidth/2-tolerance){
+            console.log("near edge!");
             return true;
+
         }
         else{
             return false;
