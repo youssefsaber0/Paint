@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="head">
+    <nav>
+      <div class="headDiv">
+        <button class="headButton" style="left:0px;" routerLink="/shapes" (click)='setMode()' routerLinkActive="active">Shapes</button>
+        <button class="headButton" style="left: 100px;" routerLink="/ColorComponent" routerLinkActive="active">Style</button>
+        <button class="headButton" style="left: 200px;"> <mat-icon>save</mat-icon></button>
+        <button class="headButton" style="left: 300px;"> <mat-icon>delete</mat-icon></button>
+        <button class="headButton" style="left: 500px;"> <mat-icon>undo</mat-icon></button>
+        <button class="headButton" style="left: 400px;"> <mat-icon>redo</mat-icon></button>
+        <button class="headButton" style="left: 600px;"> <mat-icon>folder</mat-icon></button>
+      </div>
+    </nav>
+    <div class="div">
+     <router-outlet style=" position:absolute; top: 150px; background-color: rgb(255, 242, 240);"></router-outlet>
+  </div>
+</div>
+
+  <canvas #canvas id="can">
+  </canvas>
+
+</body>
+</html>

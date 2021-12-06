@@ -1,0 +1,39 @@
+#can{
+    position: relative;
+    border: 3px solid black;
+
+
+}
+.active{
+    background-color: rgb(199, 176, 49);
+}
+.head{
+background-color: aqua;
+width: 100%;
+height: 200px;
+}
+.headButton{
+position: absolute;
+top:0px;
+left: 50px;
+height: 50px;
+width: 100px;
+border: none; 
+}
+.headDiv{
+    position: absolute;
+top:0px;
+left: 0px;
+height: 50px;
+width: 100%;
+border: none; 
+background-color: black;
+}
+.div{
+    position: absolute;
+    top: 50px;
+    height: 150px;
+    width: 100%;
+    background-color: blue;
+}
+

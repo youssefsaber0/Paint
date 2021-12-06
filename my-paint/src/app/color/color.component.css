@@ -1,0 +1,19 @@
+.text{
+    position: absolute;
+    color: cyan;
+  
+    text-align:center;
+      height: 75px;
+    width: 100px;
+    top: 0px;
+}
+.input{
+    position: absolute;
+    height: 74px;
+    width: 100px;
+    top:50px;
+    left: 0px;
+}
+input:hover{
+    background-color: darkgreen;
+}
