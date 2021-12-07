@@ -23,8 +23,7 @@ export class AppComponent implements AfterViewInit {
   /** Template reference to the canvas element */
   @ViewChild('canvas')
   canE!: ElementRef;
-  @ViewChild('doc')
-  doc!: ElementRef;
+
   
   title: string="my-paint";
   
