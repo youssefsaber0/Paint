@@ -393,12 +393,12 @@ export class EventHandler{
                 context.stroke();
                 break;
               case "line":
-                context.strokeStyle="red";
-                context.lineWidth=(current as line).lineWidth+1;
-                context.beginPath();
-                context.moveTo(points[0].x,points[0].y);
-                context.lineTo(points[1].x,points[1].y);
-                context.stroke();
+                // context.strokeStyle="red";
+                // context.lineWidth=(current as line).lineWidth+1;
+                // context.beginPath();
+                // context.moveTo(points[0].x,points[0].y);
+                // context.lineTo(points[1].x,points[1].y);
+                // context.stroke();
                 break;
             }
  
@@ -519,12 +519,12 @@ export class EventHandler{
                 context.stroke();
                 break;
               case "line":
-                context.strokeStyle='blue';
-                context.lineWidth=(current as line ).lineWidth;
-                context.beginPath();
-                context.moveTo(points[0].x,points[0].y);
-                context.lineTo(points[1].x,points[1].y);
-                context.stroke();
+                // context.strokeStyle='blue';
+                // context.lineWidth=(current as line ).lineWidth;
+                // context.beginPath();
+                // context.moveTo(points[0].x,points[0].y);
+                // context.lineTo(points[1].x,points[1].y);
+                // context.stroke();
                 break;
             }
             break;

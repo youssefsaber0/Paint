@@ -13,6 +13,7 @@ import { rectangle } from './structure/drawables/shapes/rectangle';
 import { ShapeInfo } from './structure/drawables/shapes/ShapeInfo';
 import { Drawer } from './structure/Drawer';
 import { IDrawer } from './structure/IDrawer';
+import { SharedService } from './UI/Services/SharedService';
 
  
 
@@ -39,8 +40,9 @@ export class AppComponent implements AfterViewInit {
   state!:State;
   style!:Style;
   Mode=Mode;
+  clickEvent: any;
 
-  constructor() {    
+  constructor(private serve:SharedService) {    
     this.Factory=new ShapeFactory();
     this.state=new State();
      this.state.width=1800;
@@ -49,7 +51,11 @@ export class AppComponent implements AfterViewInit {
     this.state.type="rectangle";
     this.style=new Style(2,false,true,"black","white");
     this.EHandler=new EventHandler();
-    this.EHandler.InjectStatic(this.state,this.style,this.Drawer,this.Factory);    
+    this.EHandler.InjectStatic(this.state,this.style,this.Drawer,this.Factory);
+    this.clickEvent=this.serve.getClick().subscribe(()=>{
+      this.setMode(SharedService.mode,SharedService.value)
+      console.log(this.state.type)
+    })    
   }
   public innerWidth: any;
   public innerHeight: any;

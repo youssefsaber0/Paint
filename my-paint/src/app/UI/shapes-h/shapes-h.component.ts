@@ -16,6 +16,7 @@ export class ShapesHComponent implements OnInit {
     SharedService.mode=mde
     SharedService.value=vlue
     this.share.sendClick()
+
   }
 
   
