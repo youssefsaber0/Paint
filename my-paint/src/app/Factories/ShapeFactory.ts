@@ -1,8 +1,9 @@
-import { drawable } from "../drawables/drawable";
-import { path } from "../drawables/path/path";
-import { circle } from "../drawables/shapes/circle";
-import { line } from "../drawables/shapes/line";
-import { rectangle } from "../drawables/shapes/rectangle";
+import { drawable } from "../structure/drawables/drawable";
+import { path } from "../structure/drawables/path/path";
+import { circle } from "../structure/drawables/shapes/circle";
+import { line } from "../structure/drawables/shapes/line";
+import { rectangle } from "../structure/drawables/shapes/rectangle";
+
 
 export class ShapeFactory{
     constructor(){

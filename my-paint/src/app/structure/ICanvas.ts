@@ -1,5 +1,5 @@
-import { drawable } from "../drawables/drawable";
-import { IndexedShape } from "../drawables/IndexedShape";
+import { drawable } from "./drawables/drawable";
+import { IndexedShape } from "./drawables/IndexedShape";
 
 export interface ICanvas{
     drawables:drawable[];

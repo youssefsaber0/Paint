@@ -1,8 +1,8 @@
 import { Canvas } from "./Canvas";
 import { ICanvas } from "./ICanvas";
-import { IDrawing } from "./IDrawing";
+import { IDrawer } from "./IDrawer";
 
-export class Drawing implements IDrawing{
+export class Drawer implements IDrawer{
     Width: number;
     Height: number;
     BackgroundColor: string;

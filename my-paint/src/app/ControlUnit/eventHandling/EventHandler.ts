@@ -1,26 +1,26 @@
-import { drawable } from "../drawables/drawable";
-import { path } from "../drawables/path/path";
-import { point } from "../drawables/path/point";
-import { circle } from "../drawables/shapes/circle";
-import { IShape } from "../drawables/shapes/IShape";
-import { line } from "../drawables/shapes/line";
-import { rectangle } from "../drawables/shapes/rectangle";
-import { ShapeInfo } from "../drawables/shapes/ShapeInfo";
-import { ShapeFactory } from "../Factories/ShapeFactory";
-import { Mode,SelectionMode } from "../structure/enums/enums";
-import { IDrawing } from "../structure/IDrawing";
-import { State } from "../structure/State";
-import { Style } from "../structure/Style";
+import { drawable } from "src/app/structure/drawables/drawable";
+import { path } from "src/app/structure/drawables/path/path";
+import { point } from "src/app/structure/drawables/path/point";
+import { circle } from "src/app/structure/drawables/shapes/circle";
+import { IShape } from "src/app/structure/drawables/shapes/IShape";
+import { line } from "src/app/structure/drawables/shapes/line";
+import { rectangle } from "src/app/structure/drawables/shapes/rectangle";
+import { ShapeInfo } from "src/app/structure/drawables/shapes/ShapeInfo";
+import { IDrawer } from "src/app/structure/IDrawer";
+import { ShapeFactory } from "../../Factories/ShapeFactory";
+import { Mode,SelectionMode } from "../../structure/enums/enums";
+import { State } from "../State";
+import { Style } from "../Style";
 
 export class EventHandler{
     state!:State;
     style!:Style;
-    Drawer!:IDrawing;
+    Drawer!:IDrawer;
     context!:CanvasRenderingContext2D;
     Factory!:ShapeFactory;
     offsetx!:number;offsety!:number;
 
-    InjectStatic(state:State,style:Style,Drawer:IDrawing,Factory:ShapeFactory){
+    InjectStatic(state:State,style:Style,Drawer:IDrawer,Factory:ShapeFactory){
         this.state=state;
         this.Drawer=Drawer;
         this.Factory=Factory;
@@ -295,6 +295,10 @@ export class EventHandler{
                   this.state.hovering=false;
                   this.state.current=found[i-1].shape;
                   this.state.i=found[i-1].index;
+                  if(this.state.selecting){
+                    this.highlight(this.state.selected,this.context,"selecting");
+                    this.highlight(this.state.selected,this.context,"hovering");
+                  }
                 }
                 else{
                   this.state.modifying=false;

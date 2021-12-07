@@ -1,5 +1,5 @@
-import { drawable } from "../drawables/drawable";
-import { Mode, SelectionMode } from "./enums/enums";
+import { drawable } from "../structure/drawables/drawable";
+import { Mode, SelectionMode } from "../structure/enums/enums";
 
 type NewType = Mode;
 
