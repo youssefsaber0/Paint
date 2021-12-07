@@ -1,8 +1,12 @@
 #can{
     position: relative;
     border: 3px solid black;
+    
 
 
+}
+#canContainer{
+   
 }
 .active{
     background-color: rgb(199, 176, 49);

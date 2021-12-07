@@ -1,317 +1,18 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { last } from 'rxjs';
-import { drawable } from './drawables/drawable';
-import { path } from './drawables/path/path';
 import { point } from './drawables/path/point';
 import { circle } from './drawables/shapes/circle';
-import { IShape } from './drawables/shapes/IShape';
-import { line } from './drawables/shapes/line';
 import { rectangle } from './drawables/shapes/rectangle';
-import { ShapeFactory } from './ShapeFactory/ShapeFactory';
+import { ShapeInfo } from './drawables/shapes/ShapeInfo';
+import { EventHandler } from './eventHandling/EventHandler';
+import { ShapeFactory } from './Factories/ShapeFactory';
 import { Canvas } from './structure/Canvas';
 import { Drawing } from './structure/Drawing';
-import { ICanvas } from './structure/ICanvas';
+import { Mode} from './structure/enums/enums';
 import { IDrawing } from './structure/IDrawing';
-enum Mode{Creating,Selecting,Modifying}
-enum SelectionMode{centre,firstpoint,secondpoint,edge}
+import {State} from './structure/State';
+import { Style } from './structure/Style';
 
-var Factory:ShapeFactory;
-var offsetx:number;
-var offsety:number;
-var context: CanvasRenderingContext2D;
-var canvas:ElementRef;
-var Drawer:IDrawing;
-var width:number;
-var height:number;
-var BackgroundColor:string;
-var mode:Mode;
-var Smode:SelectionMode;
-var type:string;
-var current:drawable;
-var selected:drawable;
-var index:number;
-var edge:number;
-var drawing:boolean;
-var selecting:boolean;
-var tol:number = 6;
-var x:number,y:number;
-
-function MouseDown(e:MouseEvent){
-  if(mode==Mode.Creating){
-    drawing=true;
-    current=Factory.Create(type,e.clientX-offsetx,e.clientY-offsety);
-    current.DrawOnContext(context);
-    Drawer.getCanvas().AddShape(current);
-  }
-  else if(mode==Mode.Modifying){
-
-  }
-  else if(mode==Mode.Selecting && selecting){
-      highlight(selected,context,"selecting");
-      mode=Mode.Modifying;
-  }
-
-}
-
-
-function MouseMove(e: { clientX: number; clientY: number; }){
-  if(mode==Mode.Creating&&drawing){
-    if(!type.localeCompare("path")){
-      (current as path).AddPoint(e.clientX-offsetx,e.clientY-offsety);
-    }
-    else{
-      (current as IShape).moveSecondPoint(e.clientX-offsetx,e.clientY-offsety);
-    }
-    Drawer.DrawOnContext(context);
-    console.log("moving");
-  }
-  else if(mode==Mode.Modifying){
-    if(Smode==SelectionMode.centre){
-      if(selected.type.localeCompare("line")==0){
-        (selected as IShape).move(e.clientX-offsetx-x,e.clientY-offsety-y);
-        x=e.clientX-offsetx;
-        y=e.clientY-offsety;
-      }
-      else{
-        (selected as IShape).move(e.clientX-offsetx,e.clientY-offsety);
-      }
-    }
-    if(Smode==SelectionMode.firstpoint){
-      (selected as IShape).moveFirstPoint(e.clientX-offsetx,e.clientY-offsety);
-    }
-    if(Smode==SelectionMode.secondpoint){
-      (selected as IShape).moveSecondPoint(e.clientX-offsetx,e.clientY-offsety);
-    }
-    if(Smode==SelectionMode.edge){
-      (selected as rectangle).moveEdge(edge,e.clientX-offsetx-x,e.clientY-offsety-y);
-      x=e.clientX-offsetx;
-      y=e.clientY-offsety;
-    }
-    Drawer.DrawOnContext(context);
-    highlight(selected,context,"modifying");
-    //highlight(selected,context,"selecting");
-   
-  }
-  else if(mode==Mode.Selecting){
-    var found=Drawer.getCanvas().getShape(e.clientX-offsetx,e.clientY-offsety,tol+4);
-    if(found.length>0){
-      var shape;
-      var sure = false;
-      var i=0;
-      for(i;i<found.length&&!sure;i++){
-        shape=found[i].shape;
-        switch (shape.type){
-          case "line":
-            x=e.clientX-offsetx;y=e.clientY-offsety;
-            if((selected as line).isNearFirstPoint(e.clientX-offsetx,e.clientY-offsety,tol)){
-              Smode=SelectionMode.firstpoint;
-              sure=true;
-            }
-            else if((selected as line).isNearSecondPoint(e.clientX-offsetx,e.clientY-offsety,tol)){
-              Smode=SelectionMode.secondpoint;
-              sure=true;
-            }
-            else{
-              Smode=SelectionMode.centre;
-              sure=true;
-            }
-            break;
-            case "rectangle":
-              if((shape as rectangle).isNearFirstPoint(e.clientX-offsetx,e.clientY-offsety,tol+3)){
-                Smode=SelectionMode.firstpoint;
-                sure=true;
-            }
-            else if((shape as rectangle).isNearSecondPoint(e.clientX-offsetx,e.clientY-offsety,tol+3)){
-              Smode=SelectionMode.secondpoint;
-              sure=true;            }
-              else{
-                var num=(shape as rectangle).isNearEdge(e.clientX-offsetx,e.clientY-offsety,tol);
-                if(num!=-1){
-                  x=e.clientX-offsetx;y=e.clientY-offsety;
-                  Smode=SelectionMode.edge;
-                  edge=num;
-                  sure=true;
-                }
-                else if((shape as rectangle).isNearCentre(e.clientX-offsetx,e.clientY-offsety,tol+4)){
-                  Smode=SelectionMode.centre;
-                  sure=true;
-                }
-              }
-              break;
-              case "circle":
-                if((shape as circle).isNearSecondPoint(e.clientX-offsetx,e.clientY-offsety,tol+3)){
-                  Smode=SelectionMode.secondpoint;
-                  sure=true;
-                }
-                else if((shape as circle).isNearFirstPoint(e.clientX-offsetx,e.clientY-offsety,tol+4)){
-                  Smode=SelectionMode.firstpoint;
-                  sure=true;
-                }
-                else if((shape as circle).isNearCentre(e.clientX-offsetx,e.clientY-offsety,tol+4)){
-                  Smode=SelectionMode.centre;
-                  console.error("center!");
-                  sure=true;
-                }
-            break;
-            case "path":
-              sure=true;
-              break;
-          }
-        }
-        Drawer.DrawOnContext(context);
-        for(var ind=0 ;ind<found.length;ind++){
-          highlight(found[ind].shape,context,"hovering");
-          highlight(found[ind].shape,context,"selecting");
-          
-        }
-        if(sure){
-          selecting=true;
-          selected=found[i-1].shape;
-          index=found[i-1].index;
-        }
-        else{
-          selecting=false;
-        }
-    }
-    else{
-      Drawer.DrawOnContext(context);
-      selecting=false;
-    }
-  }
-}
-
-function MouseUp(e:MouseEvent){
-  if(mode==Mode.Creating && drawing){
-    drawing=false;
-  }
-  else if(mode==Mode.Modifying){
-    mode=Mode.Selecting;
-    selecting=false;
-  }
-  else if(mode==Mode.Selecting ){
-    //do nothing
-  }
-}
-function highlight(current: drawable, context: CanvasRenderingContext2D,type:string) {
-  var points:point[]=[];
-  var i=0;
-  switch(current.type){
-    case "line":
-      points[i]=new point((current as line).x,(current as line).y);i++;
-      points[i]=new point((current as line).m,(current as line).n);
-      break;
-    case "circle":
-      points[i]=new point((current as circle).x,(current as circle).y);i++;
-
-      break;
-    case "rectangle":
-      points[i]=new point((current as rectangle).x,(current as rectangle).y);i++;
-      points[i]=new point((current as rectangle).m,(current as rectangle).n);i++;
-      points[i]=new point((points[0].x+points[1].x)/2,(points[0].y+points[1].y)/2);i++
-      break;
-    default:
-      break;
-  }
-  switch(type){
-    case "hovering":
-      context.lineWidth=1;
-      context.strokeStyle="grey";
-      for(var i=0;i<points.length;i++){
-        context.beginPath();
-        context.arc(points[i].x,points[i].y,8,0,2*Math.PI);
-        context.stroke();
-      }
-      break;
-    case "modifying":
-      // context.lineWidth=2;
-      switch(Smode){
-        case SelectionMode.centre:
-          if(current.type=="rectangle"){
-            context.strokeStyle='green';
-            context.lineWidth=2;
-            context.beginPath();
-            context.arc(points[2].x,points[2].y,8,0,2*Math.PI);
-            context.stroke();
-          }
-          break;
-        case SelectionMode.edge:
-          var l:line;
-          switch(edge){
-            case 0:
-              l=new line(false,points[0].x,points[0].y,points[0].x,points[1].y,(current as rectangle).lineWidth,"green") ;
-              break;
-            case 2:
-              l=new line(false,points[1].x,points[0].y,points[1].x,points[1].y,(current as rectangle).lineWidth,"green") ;
-              break;
-            case 1:
-              l=new line(false,points[0].x,points[0].y,points[1].x,points[0].y,(current as rectangle).lineWidth,"green") ;
-              break;
-            case 3:
-              l=new line(false,points[0].x,points[1].y,points[1].x,points[1].y,(current as rectangle).lineWidth,"green") ;
-              break;
-            default:
-              throw Error("..?");
-          }
-          l.DrawOnContext(context);
-          break;
-        
-        case SelectionMode.firstpoint:
-          context.strokeStyle='green';
-          context.lineWidth=1;
-          context.beginPath();
-          context.arc(points[0].x,points[0].y,8,0,2*Math.PI);
-          context.stroke();
-          break;
-        case SelectionMode.secondpoint:
-          if(!current.type.localeCompare("circle")){
-            break;
-          }
-          context.strokeStyle='green';
-          context.lineWidth=1;
-          context.beginPath();
-          context.arc(points[1].x,points[1].y,8,0,2*Math.PI);
-          context.stroke();
-          break;
-        
-      }
-      break;
-
-    case "selecting":
-      context.strokeStyle="green";
-      context.lineWidth=1;
-      switch(current.type){
-        case "circle":
-          context.beginPath();
-          context.arc(points[0].x,points[0].y,(current as circle).radius-((current as circle).lineWidth/2)-3,0,(0.2)*Math.PI);
-          context.stroke();
-          context.beginPath();
-          context.arc(points[0].x,points[0].y,(current as circle).radius-((current as circle).lineWidth/2)-3,Math.PI,(1.2)*Math.PI);
-          context.stroke();
-
-          context.beginPath();
-          context.moveTo(points[0].x-2,points[0].y);
-          context.lineTo(points[0].x+2,points[0].y);
-          context.moveTo(points[0].x,points[0].y-2);
-          context.lineTo(points[0].x,points[0].y+2);
-          context.stroke();
-          break;
-        case "rectangle":
-          context.beginPath();
-          context.moveTo(points[2].x-2,points[2].y);
-          context.lineTo(points[2].x+2,points[2].y);
-          context.moveTo(points[2].x,points[2].y-2);
-          context.lineTo(points[2].x,points[2].y+2);
-          context.stroke();
-          break;
-        case "line":
-          context.beginPath();
-          context.moveTo(points[0].x,points[0].y);
-          context.lineTo(points[1].x,points[1].y);
-          context.stroke();
-          break;
-      }
-  }
-}
+ 
 
 @Component({
   selector: 'app-root',
@@ -322,51 +23,102 @@ export class AppComponent implements AfterViewInit {
   /** Template reference to the canvas element */
   @ViewChild('canvas')
   canE!: ElementRef;
+
   
-  /** Canvas 2d context */
-  private drawing:boolean;
   title: string="my-paint";
   
-  // private offsetx!:number;
-  // private offsety!:number;
-  
-  constructor() {
-    this.drawing=false;
-    
+
+  context!: CanvasRenderingContext2D;
+  offsetx!: number;
+  offsety!: number;
+  Factory!: ShapeFactory;
+  Drawer!: IDrawing;
+  EHandler!:EventHandler;
+  state!:State;
+  style!:Style;
+  Mode=Mode;
+
+  constructor() {    
+    this.Factory=new ShapeFactory();
+    this.state=new State();
+     this.state.width=1800;
+    this.state.height=1800;
+    this.Drawer=new Drawing(this.state.width,this.state.height,this.state.BackgroundColor);
+    this.state.type="rectangle";
+    this.style=new Style(2,false,true,"black","white");
+    this.EHandler=new EventHandler();
+    this.EHandler.InjectStatic(this.state,this.style,this.Drawer,this.Factory);    
   }
-  ngOnInit(){
-  }
-   setMode(){
-    mode =Mode.Creating;
-    type="rectangle";
+  public innerWidth: any;
+  public innerHeight: any;
+  ngOnInit() {
+      this.innerWidth = window.scrollY;
+      this.innerHeight = window.scrollX;
+
   }
   ngAfterViewInit() {
-
-    width=1800;
-    height=1800;
-    BackgroundColor='white';
-    (this.canE.nativeElement as HTMLCanvasElement).width=width;
-    (this.canE.nativeElement as HTMLCanvasElement).height=height;
-    offsetx=(this.canE.nativeElement as HTMLCanvasElement).offsetLeft+8;
-    offsety=(this.canE.nativeElement as HTMLCanvasElement).offsetTop+8;
-    context = <CanvasRenderingContext2D>(this.canE.nativeElement as HTMLCanvasElement).getContext('2d');
-    Factory=new ShapeFactory();
+   
+    // this.Factory=new ShapeFactory();
+    (this.canE.nativeElement as HTMLCanvasElement).width=this.state.width;
+    (this.canE.nativeElement as HTMLCanvasElement).height=this.state.height;
+    this.offsetx=(this.canE.nativeElement as HTMLCanvasElement).offsetLeft;
+    this.offsety=(this.canE.nativeElement as HTMLCanvasElement).offsetTop;
+    this.context = <CanvasRenderingContext2D>(this.canE.nativeElement as HTMLCanvasElement).getContext('2d');
     var C=new Canvas();
-    C.AddShape(new rectangle(false,100,100,230,220,6,"black"));
-    C.AddShape(new line(false,0,0,40,20,6,"black"));
-    C.AddShape(new circle(false,100,100,40,20,2,"black"));
-    C.AddShape(new circle(false,0,0,40,20,2,"black"));
-    Drawer=new Drawing(width,height,BackgroundColor,C);
-    Drawer.DrawOnContext(context);
+    this.EHandler.InjectView(this.context,this.offsetx,this.offsety);
+    
+    // this.canE.nativeElement.addEventListener('mousedown',MouseDown,false);
+    // this.canE.nativeElement.addEventListener('mousemove',MouseMove,false);
+    // this.canE.nativeElement.addEventListener('mouseup',MouseUp,false);
+    let r=new rectangle();
+    var c=new circle();
+    let Si=new ShapeInfo(new point(20,30),new point(200,130),3,false,true,'black','blue');
+    let Si2=new ShapeInfo(new point(30,40),new point(220,100),3,false,true,'black','blue');
+    r.feedInfo(Si);
+    c.feedInfo(Si2);
+    this.Drawer.getCanvas().AddShape(r);
+    this.Drawer.getCanvas().AddShape(c);
 
-    this.canE.nativeElement.addEventListener('mousedown',MouseDown,false);
-    this.canE.nativeElement.addEventListener('mousemove',MouseMove,false);
-    this.canE.nativeElement.addEventListener('mouseup',MouseUp,false);
-    mode=Mode.Selecting;
-    type="path";
-    canvas=this.canE;
+    this.Drawer.DrawOnContext(this.context);
+    
+    // this.mode=Mode.Selecting;
+    // this.type="path";
+    // this.canvas=this.canE;
     // context.fillStyle = 'white';
     // context.fillRect(0,0,canvas.nativeElement.width,canvas.nativeElement.height);
+  }
+  setMode(mode:number,type?:string){
+    switch(mode){
+      case 0:
+        this.state.mode=Mode.Creating;
+        break;
+      case 1:
+        this.state.mode=Mode.Selecting;
+        break;
+      case 2:
+        this.state.mode=Mode.Modifying;
+        break;
+    }
+    this.state.mode=mode;
+    if(type){
+      this.state.type=type;
+    }
+  }
+  Mouse(e:MouseEvent,type:number){
+    switch(type){
+      case 0:
+        console.log(window.scrollX);
+        this.EHandler.MouseDown(e,window.scrollX,window.scrollY);
+        break;
+      case 1:
+        this.EHandler.MouseMove(e,window.scrollX,window.scrollY,window.innerWidth,window.innerHeight);
+        break;
+      case 2:
+        this.EHandler.MouseUp(e,window.scrollX,window.scrollY);
+        break;
+      default:
+        throw Error("???");
+    }
   }
 }
   /**

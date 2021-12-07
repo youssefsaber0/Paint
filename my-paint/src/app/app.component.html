@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html #doc lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,10 +7,11 @@
   <title>Document</title>
 </head>
 <body>
+  <!-->enum Mode{Creating,Selecting,Modifying}<!-->
   <div class="head">
     <nav>
       <div class="headDiv">
-        <button class="headButton" style="left:0px;" routerLink="/shapes" (click)='setMode()' routerLinkActive="active">Shapes</button>
+        <button class="headButton" style="left:0px;" routerLink="/shapes" (click)='setMode(0,"rectangle")' routerLinkActive="active">Shapes</button>
         <button class="headButton" style="left: 100px;" routerLink="/ColorComponent" routerLinkActive="active">Style</button>
         <button class="headButton" style="left: 200px;"> <mat-icon>save</mat-icon></button>
         <button class="headButton" style="left: 300px;"> <mat-icon>delete</mat-icon></button>
@@ -23,9 +24,10 @@
      <router-outlet style=" position:absolute; top: 150px; background-color: rgb(255, 242, 240);"></router-outlet>
   </div>
 </div>
-
-  <canvas #canvas id="can">
+<div id="canContainer">
+  <canvas #canvas id="can" (mousedown)='Mouse($event,0)' (mousemove)='Mouse($event,1)' (mouseup)='Mouse($event,2)'>
   </canvas>
+</div>
 
 </body>
 </html>
