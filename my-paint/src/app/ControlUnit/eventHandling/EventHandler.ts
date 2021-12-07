@@ -224,11 +224,11 @@ export class EventHandler{
                   case "line":
                     this.state.x=e.clientX+scrollx-this.offsetx;
                     this.state.y=e.clientY+scrolly-this.offsety;
-                    if((this.state.selected as line).isNearFirstPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance)){
+                    if((shape as line).isNearFirstPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance)){
                       this.state.Smode=SelectionMode.firstpoint;
                       sure=true;
                     }
-                    else if((this.state.selected as line).isNearSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance)){
+                    else if((shape as line).isNearSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance)){
                       this.state.Smode=SelectionMode.secondpoint;
                       sure=true;
                     }
@@ -393,6 +393,8 @@ export class EventHandler{
                 context.stroke();
                 break;
               case "line":
+                context.strokeStyle="red";
+                context.lineWidth=(current as line).lineWidth+1;
                 context.beginPath();
                 context.moveTo(points[0].x,points[0].y);
                 context.lineTo(points[1].x,points[1].y);
@@ -517,6 +519,8 @@ export class EventHandler{
                 context.stroke();
                 break;
               case "line":
+                context.strokeStyle='blue';
+                context.lineWidth=(current as line ).lineWidth;
                 context.beginPath();
                 context.moveTo(points[0].x,points[0].y);
                 context.lineTo(points[1].x,points[1].y);
