@@ -94,27 +94,37 @@ export class AppComponent implements AfterViewInit {
     (this.canE.nativeElement as HTMLCanvasElement).width=this.state.width;
     (this.canE.nativeElement as HTMLCanvasElement).height=this.state.height;
   }
-
+  setMode(mde:string,vlue:string){
+    if(mde==="Creating"){
+     console.log("in if");
+     this.state.mode =Mode.Creating;
+     this.state.type=vlue;
+   }
+   else if(mde==="Selecting"){
+     console.log('in select');
+     this.state.mode=Mode.Selecting;
+   }
+ }
 
 
   //events:
-  setMode(mode:number,type?:string){
-    switch(mode){
-      case 0:
-        this.state.mode=Mode.Creating;
-        break;
-      case 1:
-        this.state.mode=Mode.Selecting;
-        break;
-      case 2:
-        this.state.mode=Mode.Modifying;
-        break;
-    }
-    this.state.mode=mode;
-    if(type){
-      this.state.type=type;
-    }
-  }
+  // setMode(mode:number,type?:string){
+  //   switch(mode){
+  //     case 0:
+  //       this.state.mode=Mode.Creating;
+  //       break;
+  //     case 1:
+  //       this.state.mode=Mode.Selecting;
+  //       break;
+  //     case 2:
+  //       this.state.mode=Mode.Modifying;
+  //       break;
+  //   }
+  //   this.state.mode=mode;
+  //   if(type){
+  //     this.state.type=type;
+  //   }
+  // }
   //canvas MouseEvents:
   //already connected with the canvas don't worry about it:
   Mouse(e:MouseEvent,type:number){

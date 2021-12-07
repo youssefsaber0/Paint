@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html #doc lang="en">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Paint</title>
 </head>
 <body>
-  <!-->enum Mode{Creating,Selecting,Modifying}<!-->
   <div class="head">
     <nav>
       <div class="headDiv">
-        <button class="headButton" style="left:0px;" routerLink="/shapes" (click)='setMode(0,"rectangle")' routerLinkActive="active">Shapes</button>
-        <button class="headButton" style="left: 100px;" routerLink="/ColorComponent" routerLinkActive="active">Style</button>
+        <button class="headButton" style="left:0px;" routerLink="/shapes" routerLinkActive="active">Shapes</button>
+        <button class="headButton" style="left: 100px;" routerLink="/ColorComponent" routerLinkActive="active" (click)=" setMode('Selecting','')">Style</button>
         <button class="headButton" style="left: 200px;"> <mat-icon>save</mat-icon></button>
         <button class="headButton" style="left: 300px;"> <mat-icon>delete</mat-icon></button>
         <button class="headButton" style="left: 500px;"> <mat-icon>undo</mat-icon></button>

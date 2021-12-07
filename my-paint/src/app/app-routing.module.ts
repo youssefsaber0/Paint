@@ -1,5 +1,5 @@
 import { ShapesHComponent } from './UI/shapes-h/shapes-h.component';
-import { ColorComponent } from './UI/shapes-h/color/color.component';
+import { ColorComponent } from './UI/color/color.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
