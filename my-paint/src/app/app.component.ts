@@ -50,9 +50,12 @@ export class AppComponent implements AfterViewInit {
     this.EHandler=new EventHandler();
     this.EHandler.InjectStatic(this.state,this.style,this.Drawer,this.Factory);    
   }
-  ngOnInit(){
+  public innerWidth: any;
+  public innerHeight: any;
+  ngOnInit() {
+      this.innerWidth = window.scrollY;
+      this.innerHeight = window.scrollX;
 
- 
   }
   ngAfterViewInit() {
    
@@ -105,14 +108,14 @@ export class AppComponent implements AfterViewInit {
   Mouse(e:MouseEvent,type:number){
     switch(type){
       case 0:
-        console.log((this.doc.nativeElement as HTMLCanvasElement).scrollTop);
-        this.EHandler.MouseDown(e);
+        console.log(window.scrollX);
+        this.EHandler.MouseDown(e,window.scrollX,window.scrollY);
         break;
       case 1:
-        this.EHandler.MouseMove(e);
+        this.EHandler.MouseMove(e,window.scrollX,window.scrollY);
         break;
       case 2:
-        this.EHandler.MouseUp(e);
+        this.EHandler.MouseUp(e,window.scrollX,window.scrollY);
         break;
       default:
         throw Error("???");

@@ -24,9 +24,10 @@
      <router-outlet style=" position:absolute; top: 150px; background-color: rgb(255, 242, 240);"></router-outlet>
   </div>
 </div>
+<div id="canContainer">
   <canvas #canvas id="can" (mousedown)='Mouse($event,0)' (mousemove)='Mouse($event,1)' (mouseup)='Mouse($event,2)'>
   </canvas>
- 
+</div>
 
 </body>
 </html>

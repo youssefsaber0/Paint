@@ -32,10 +32,10 @@ export class EventHandler{
         this.offsetx=offsetx;
         this.offsety=offsety;
     }
-    MouseDown(e:MouseEvent){
+    MouseDown(e:MouseEvent,scrollx:number,scrolly:number){
         if(this.state.mode==Mode.Creating){
           this.state.drawing=true;
-          var p1=new point(e.clientX-this.offsetx,e.clientY-this.offsety);
+          var p1=new point(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety);
           var si=new ShapeInfo(p1,p1,this.style.lineWidth,this.style.F,this.style.O,this.style.Ocolor,this.style.Fcolor);
           this.state.current=this.Factory.Create(this.state.type);
           this.state.current.feedInfo(si);
@@ -72,13 +72,13 @@ export class EventHandler{
             }
         }
     }
-    MouseMove(e:MouseEvent){
+    MouseMove(e:MouseEvent,scrollx:number,scrolly:number){
         if(this.state.mode==Mode.Creating&&this.state.drawing){
           if(!this.state.type.localeCompare("path")){
-            (this.state.current as path).AddPoint(e.clientX-this.offsetx,e.clientY-this.offsety);
+            (this.state.current as path).AddPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety);
           }
           else{
-            (this.state.current as IShape).moveSecondPoint(e.clientX-this.offsetx,e.clientY-this.offsety);
+            (this.state.current as IShape).moveSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety);
           }
           this.Drawer.DrawOnContext(this.context);
           console.log("moving");
@@ -86,24 +86,24 @@ export class EventHandler{
         else if(this.state.mode==Mode.Modifying){
           if(this.state.Smode==SelectionMode.centre){
             if(this.state.selected.type.localeCompare("line")==0){
-              (this.state.selected as IShape).move(e.clientX-this.offsetx-this.state.x,e.clientY-this.offsety-this.state.y);
-              this.state.x=e.clientX-this.offsetx;
-              this.state.y=e.clientY-this.offsety;
+              (this.state.selected as IShape).move(e.clientX+scrollx-this.offsetx-this.state.x,e.clientY+scrolly-this.offsety-this.state.y);
+              this.state.x=e.clientX+scrollx-this.offsetx;
+              this.state.y=e.clientY+scrolly-this.offsety;
             }
             else{
-              (this.state.selected as IShape).move(e.clientX-this.offsetx,e.clientY-this.offsety);
+              (this.state.selected as IShape).move(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety);
             }
           }
           if(this.state.Smode==SelectionMode.firstpoint){
-            (this.state.selected as IShape).moveFirstPoint(e.clientX-this.offsetx,e.clientY-this.offsety);
+            (this.state.selected as IShape).moveFirstPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety);
           }
           if(this.state.Smode==SelectionMode.secondpoint){
-            (this.state.selected as IShape).moveSecondPoint(e.clientX-this.offsetx,e.clientY-this.offsety);
+            (this.state.selected as IShape).moveSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety);
           }
           if(this.state.Smode==SelectionMode.edge){
-            (this.state.selected as rectangle).moveEdge(this.state.edge,e.clientX-this.offsetx-this.state.x,e.clientY-this.offsety-this.state.y);
-            this.state.x=e.clientX-this.offsetx;
-            this.state.y=e.clientY-this.offsety;
+            (this.state.selected as rectangle).moveEdge(this.state.edge,e.clientX+scrollx-this.offsetx-this.state.x,e.clientY+scrolly-this.offsety-this.state.y);
+            this.state.x=e.clientX+scrollx-this.offsetx;
+            this.state.y=e.clientY+scrolly-this.offsety;
           }
           this.Drawer.DrawOnContext(this.context);
           this.highlight(this.state.selected,this.context,"modifying");
@@ -111,18 +111,18 @@ export class EventHandler{
         }
         else if(this.state.mode==Mode.Selecting){
             if(this.state.selecting){
-              if(this.state.selected.Contains(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+4)){ 
+              if(this.state.selected.Contains(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+4)){ 
                 shape=this.state.selected;
                 var sure1=false;
                 switch (shape.type){
                   case "line":
-                    this.state.x=e.clientX-this.offsetx;
-                    this.state.y=e.clientY-this.offsety;
-                    if((this.state.selected as line).isNearFirstPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance)){
+                    this.state.x=e.clientX+scrollx-this.offsetx;
+                    this.state.y=e.clientY+scrolly-this.offsety;
+                    if((this.state.selected as line).isNearFirstPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance)){
                       this.state.Smode=SelectionMode.firstpoint;
                       sure1=true;
                     }
-                    else if((this.state.selected as line).isNearSecondPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance)){
+                    else if((this.state.selected as line).isNearSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance)){
                       this.state.Smode=SelectionMode.secondpoint;
                       sure1=true;
                     }
@@ -132,38 +132,38 @@ export class EventHandler{
                     }
                     break;
                     case "rectangle":
-                      if((shape as rectangle).isNearFirstPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+3)){
+                      if((shape as rectangle).isNearFirstPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+3)){
                         this.state.Smode=SelectionMode.firstpoint;
                         sure1=true;
                     }
-                    else if((shape as rectangle).isNearSecondPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+3)){
+                    else if((shape as rectangle).isNearSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+3)){
                       this.state.Smode=SelectionMode.secondpoint;
                       sure1=true;            
                     }
                       else{
-                        var num=(shape as rectangle).isNearEdge(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance);
+                        var num=(shape as rectangle).isNearEdge(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance);
                         if(num!=-1){
-                          this.state.x=e.clientX-this.offsetx;this.state.y=e.clientY-this.offsety;
+                          this.state.x=e.clientX+scrollx-this.offsetx;this.state.y=e.clientY+scrolly-this.offsety;
                           this.state.Smode=SelectionMode.edge;
                           this.state.edge=num;
                           sure1=true;
                         }
-                        else if((shape as rectangle).isNearCentre(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+4)){
+                        else if((shape as rectangle).isNearCentre(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+4)){
                           this.state.Smode=SelectionMode.centre;
                           sure1=true;
                         }
                       }
                       break;
                       case "circle":
-                        if((shape as circle).isNearSecondPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+3)){
+                        if((shape as circle).isNearSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+3)){
                           this.state.Smode=SelectionMode.secondpoint;
                           sure1=true;
                         }
-                        else if((shape as circle).isNearFirstPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+4)){
+                        else if((shape as circle).isNearFirstPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+4)){
                           this.state.Smode=SelectionMode.firstpoint;
                           sure1=true;
                         }
-                        else if((shape as circle).isNearCentre(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+4)){
+                        else if((shape as circle).isNearCentre(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+4)){
                           this.state.Smode=SelectionMode.centre;
                           console.error("center!");
                           sure1=true;
@@ -188,7 +188,7 @@ export class EventHandler{
                   
               }
             }
-            var found=this.Drawer.getCanvas().getShape(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+4);
+            var found=this.Drawer.getCanvas().getShape(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+4);
             if(found.length>0){
               var shape;
               var sure = false;
@@ -197,13 +197,13 @@ export class EventHandler{
                 shape=found[i].shape;
                 switch (shape.type){
                   case "line":
-                    this.state.x=e.clientX-this.offsetx;
-                    this.state.y=e.clientY-this.offsety;
-                    if((this.state.selected as line).isNearFirstPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance)){
+                    this.state.x=e.clientX+scrollx-this.offsetx;
+                    this.state.y=e.clientY+scrolly-this.offsety;
+                    if((this.state.selected as line).isNearFirstPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance)){
                       this.state.Smode=SelectionMode.firstpoint;
                       sure=true;
                     }
-                    else if((this.state.selected as line).isNearSecondPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance)){
+                    else if((this.state.selected as line).isNearSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance)){
                       this.state.Smode=SelectionMode.secondpoint;
                       sure=true;
                     }
@@ -213,38 +213,38 @@ export class EventHandler{
                     }
                     break;
                     case "rectangle":
-                      if((shape as rectangle).isNearFirstPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+3)){
+                      if((shape as rectangle).isNearFirstPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+3)){
                         this.state.Smode=SelectionMode.firstpoint;
                         sure=true;
                     }
-                    else if((shape as rectangle).isNearSecondPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+3)){
+                    else if((shape as rectangle).isNearSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+3)){
                       this.state.Smode=SelectionMode.secondpoint;
                       sure=true;            
                     }
                       else{
-                        var num=(shape as rectangle).isNearEdge(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance);
+                        var num=(shape as rectangle).isNearEdge(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance);
                         if(num!=-1){
-                          this.state.x=e.clientX-this.offsetx;this.state.y=e.clientY-this.offsety;
+                          this.state.x=e.clientX+scrollx-this.offsetx;this.state.y=e.clientY+scrolly-this.offsety;
                           this.state.Smode=SelectionMode.edge;
                           this.state.edge=num;
                           sure=true;
                         }
-                        else if((shape as rectangle).isNearCentre(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+4)){
+                        else if((shape as rectangle).isNearCentre(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+4)){
                           this.state.Smode=SelectionMode.centre;
                           sure=true;
                         }
                       }
                       break;
                       case "circle":
-                        if((shape as circle).isNearSecondPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+3)){
+                        if((shape as circle).isNearSecondPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+3)){
                           this.state.Smode=SelectionMode.secondpoint;
                           sure=true;
                         }
-                        else if((shape as circle).isNearFirstPoint(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+4)){
+                        else if((shape as circle).isNearFirstPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+4)){
                           this.state.Smode=SelectionMode.firstpoint;
                           sure=true;
                         }
-                        else if((shape as circle).isNearCentre(e.clientX-this.offsetx,e.clientY-this.offsety,this.state.tolerance+10)){
+                        else if((shape as circle).isNearCentre(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety,this.state.tolerance+10)){
                           this.state.Smode=SelectionMode.centre;
                           console.error("center!");
                           sure=true;
@@ -297,7 +297,7 @@ export class EventHandler{
             }
           }
     }
-    MouseUp(e:MouseEvent){
+    MouseUp(e:MouseEvent,scrollx:number,scrolly:number){
         if(this.state.mode==Mode.Creating && this.state.drawing){
           this.state.drawing=false;
         }
