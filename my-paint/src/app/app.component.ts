@@ -42,6 +42,8 @@ export class AppComponent implements AfterViewInit {
   constructor() {    
     this.Factory=new ShapeFactory();
     this.state=new State();
+     this.state.width=1800;
+    this.state.height=1800;
     this.Drawer=new Drawing(this.state.width,this.state.height,this.state.BackgroundColor);
     this.state.type="rectangle";
     this.style=new Style(2,false,true,"black","white");
@@ -53,8 +55,7 @@ export class AppComponent implements AfterViewInit {
  
   }
   ngAfterViewInit() {
-    this.state.width=1800;
-    this.state.height=1800;
+   
     // this.Factory=new ShapeFactory();
     (this.canE.nativeElement as HTMLCanvasElement).width=this.state.width;
     (this.canE.nativeElement as HTMLCanvasElement).height=this.state.height;
