@@ -404,11 +404,11 @@ export class EventHandler{
                     l=new line() ;
                     l.feedInfo(SI1);
                     break;
-                  case 2:
+                  case 1:
                     l=new line() ;
                     l.feedInfo(SI2);
                     break;
-                    case 1:
+                    case 2:
                     l=new line() ;
                     l.feedInfo(SI3);
                     break;
