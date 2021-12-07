@@ -112,7 +112,7 @@ export class AppComponent implements AfterViewInit {
         this.EHandler.MouseDown(e,window.scrollX,window.scrollY);
         break;
       case 1:
-        this.EHandler.MouseMove(e,window.scrollX,window.scrollY);
+        this.EHandler.MouseMove(e,window.scrollX,window.scrollY,window.innerWidth,window.innerHeight);
         break;
       case 2:
         this.EHandler.MouseUp(e,window.scrollX,window.scrollY);

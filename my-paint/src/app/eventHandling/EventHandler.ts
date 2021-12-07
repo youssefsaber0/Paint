@@ -72,8 +72,21 @@ export class EventHandler{
             }
         }
     }
-    MouseMove(e:MouseEvent,scrollx:number,scrolly:number){
+    MouseMove(e:MouseEvent,scrollx:number,scrolly:number,W:number,H:number){
         if(this.state.mode==Mode.Creating&&this.state.drawing){
+          console.log(W-e.clientX,W);
+          if(W-e.clientX<40){
+            window.scrollBy(16,0);
+          }
+          else if(W-e.clientX>W-40){
+            window.scrollBy(-16,0);
+          }
+          if(H-e.clientY<40){
+            window.scrollBy(0,16);
+          }
+          else if(H-e.clientY>H-40){
+            window.scrollBy(0,-16);
+          }
           if(!this.state.type.localeCompare("path")){
             (this.state.current as path).AddPoint(e.clientX+scrollx-this.offsetx,e.clientY+scrolly-this.offsety);
           }
@@ -84,6 +97,18 @@ export class EventHandler{
           console.log("moving");
         }
         else if(this.state.mode==Mode.Modifying){
+          if(W-e.clientX+scrollx<4){
+            window.scrollBy(1,0);
+          }
+          else if(W-e.clientX+scrollx>W-4){
+            window.scrollBy(-1,0);
+          }
+          if(H-e.clientY+scrolly<4){
+            window.scrollBy(0,1);
+          }
+          else if(H-e.clientY+scrolly>H-4){
+            window.scrollBy(0,-1);
+          }
           if(this.state.Smode==SelectionMode.centre){
             if(this.state.selected.type.localeCompare("line")==0){
               (this.state.selected as IShape).move(e.clientX+scrollx-this.offsetx-this.state.x,e.clientY+scrolly-this.offsety-this.state.y);
