@@ -1,31 +1,49 @@
+import { point } from "../path/point";
 import { IShape } from "./IShape";
+import { ShapeInfo } from "./ShapeInfo";
 
 export class circle implements IShape{
-    type="circle";
-    F:boolean;
-    x: number;
-    y: number;
-    m: number;
-    n: number;
-
-    radius!: number;
+    type:string;
+    x:number;
+    y:number;
+    m:number;
+    n:number;
+    
+    lineWidth!: number;
+    F: boolean;
+    O: boolean;
+    
+    radius: number;
     Ocolor:string;
     Fcolor:string;
-    constructor(F:boolean,a:number,b:number,c:number,d:number,lineW:number,Oc:string,Fc?:string){
-        this.F=F;
+
+
+    feedInfo(SI:ShapeInfo){
         this.type="circle";
-        this.x=a;
-        this.y=b;
-
-
-        this.m=c;
-        this.n=d;
-        this.lineWidth=lineW;
+        this.F=SI.F;
+        this.O=SI.O;
+        this.x=SI.p1.x;
+        this.y=SI.p1.y;
+        this.m=SI.p2.x;
+        this.n=SI.p2.y;
+        this.lineWidth=SI.lineWidth;
+        this.Ocolor=SI.Ocolor;
+        this.Fcolor=SI.Fcolor;
         this.updateRad();
-        this.Ocolor=Oc;
-        this.Fcolor=Fc||"";
     }
-    lineWidth: number;
+    constructor(){
+        this.F=false;
+        this.O=true;
+        this.type="circle";
+        this.x=0;
+        this.y=0;
+        this.m=0;
+        this.n=0;
+        this.radius=0;
+        this.lineWidth=0;
+        this.Ocolor="black";
+        this.Fcolor="black";
+    }
     updateRad(){
         this.radius= Math.sqrt(Math.pow((this.m-this.x),2)+Math.pow((this.n-this.y),2));
     }

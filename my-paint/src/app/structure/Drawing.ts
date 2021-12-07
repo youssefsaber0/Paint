@@ -1,3 +1,4 @@
+import { Canvas } from "./Canvas";
 import { ICanvas } from "./ICanvas";
 import { IDrawing } from "./IDrawing";
 
@@ -8,10 +9,10 @@ export class Drawing implements IDrawing{
     current: ICanvas;
     Back: ICanvas[];
     Forward: ICanvas[];
-    constructor(w:number,h:number,BackgroundColor:string,canvas:ICanvas){
+    constructor(w:number,h:number,BackgroundColor:string){
         this.Width=w;this.Height=h;
-        this.current=canvas;
         this.BackgroundColor=BackgroundColor;
+        this.current=new Canvas();
         this.Back=[];
         this.Forward=[];
     }
