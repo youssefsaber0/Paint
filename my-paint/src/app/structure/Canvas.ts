@@ -1,7 +1,7 @@
-
+import { drawable } from "../drawables/drawable";
+import { IShape } from "../drawables/shapes/IShape";
 import { ICanvas } from "./ICanvas";
-import { IndexedShape } from "./drawables/IndexedShape";
-import { drawable } from "./drawables/drawable";
+import { IndexedShape } from "../drawables/IndexedShape";
 
 export class Canvas implements ICanvas{
     drawables:drawable[];

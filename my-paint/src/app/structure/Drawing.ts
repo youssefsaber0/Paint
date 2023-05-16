@@ -1,18 +1,17 @@
-import { Canvas } from "./Canvas";
 import { ICanvas } from "./ICanvas";
-import { IDrawer } from "./IDrawer";
+import { IDrawing } from "./IDrawing";
 
-export class Drawer implements IDrawer{
+export class Drawing implements IDrawing{
     Width: number;
     Height: number;
     BackgroundColor: string;
     current: ICanvas;
     Back: ICanvas[];
     Forward: ICanvas[];
-    constructor(w:number,h:number,BackgroundColor:string){
+    constructor(w:number,h:number,BackgroundColor:string,canvas:ICanvas){
         this.Width=w;this.Height=h;
+        this.current=canvas;
         this.BackgroundColor=BackgroundColor;
-        this.current=new Canvas();
         this.Back=[];
         this.Forward=[];
     }

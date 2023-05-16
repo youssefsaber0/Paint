@@ -1,6 +1,6 @@
 import { ICanvas } from "./ICanvas";
 
-export interface IDrawer{
+export interface IDrawing{
     Width: number;
     Height: number;
     BackgroundColor: string;

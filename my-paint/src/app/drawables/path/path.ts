@@ -1,24 +1,16 @@
 import { drawable } from "../drawable";
-import { ShapeInfo } from "../shapes/ShapeInfo";
 import { point } from "./point";
 
 export class path implements drawable{
     type="path";
     points!: point[];
-    StartingPoint!:point;
+    StartingPoint:point;
     //make new point and set start 
-    constructor(){
+    constructor(x:number,y:number){
         this.points=[];
-        this.type='path';
+        this.points[0]=new point(x,y);
+        this.StartingPoint=this.points[0];
     }
-    feedInfo(SI:ShapeInfo){
-        this.SetStartingPoint(SI.p1);
-    }
-    SetStartingPoint(p:point){
-        this.StartingPoint=p;
-        this.points[0]=p;
-    }
-
     //add new point after click
     AddPoint(x:number,y:number){
         this.points.push(new point(x,y));

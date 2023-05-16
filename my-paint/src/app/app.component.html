@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paint</title>
+  <title>Document</title>
 </head>
 <body>
   <div class="head">
     <nav>
       <div class="headDiv">
-        <button class="headButton" style="left:0px;" routerLink="/shapes" routerLinkActive="active">Shapes</button>
-        <button class="headButton" style="left: 100px;" routerLink="/ColorComponent" routerLinkActive="active" (click)=" setMode('Selecting','')">Style</button>
+        <button class="headButton" style="left:0px;" routerLink="/shapes" (click)='setMode()' routerLinkActive="active">Shapes</button>
+        <button class="headButton" style="left: 100px;" routerLink="/ColorComponent" routerLinkActive="active">Style</button>
         <button class="headButton" style="left: 200px;"> <mat-icon>save</mat-icon></button>
         <button class="headButton" style="left: 300px;"> <mat-icon>delete</mat-icon></button>
         <button class="headButton" style="left: 500px;"> <mat-icon>undo</mat-icon></button>
@@ -23,10 +23,9 @@
      <router-outlet style=" position:absolute; top: 150px; background-color: rgb(255, 242, 240);"></router-outlet>
   </div>
 </div>
-<div id="canContainer">
-  <canvas #canvas id="can" (mousedown)='Mouse($event,0)' (mousemove)='Mouse($event,1)' (mouseup)='Mouse($event,2)'>
+
+  <canvas #canvas id="can">
   </canvas>
-</div>
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-import { Drawing } from "../structure/Drawer";
+import { Drawing } from "../structure/Drawing";
 
 export interface IStorageManager {
     load():Drawing;

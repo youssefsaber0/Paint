@@ -1,6 +1,5 @@
 import { circle } from "./circle";
 import { IShape } from "./IShape";
-import { ShapeInfo } from "./ShapeInfo";
 
 
 
@@ -13,29 +12,16 @@ export class line implements IShape{
     F: boolean;
     Ocolor: string;
     Fcolor: string ;
-    O: boolean;
-    feedInfo(SI:ShapeInfo){
-        this.F=SI.F;
-        this.O=SI.O;
-        this.x=SI.p1.x;
-        this.y=SI.p1.y;
-        this.m=SI.p2.x;
-        this.n=SI.p2.y;
-        this.lineWidth=SI.lineWidth;
-        this.Ocolor=SI.Ocolor;
-        this.Fcolor=SI.Fcolor;
-    }
-    constructor(){
-        this.F=false;
-        this.O=true;
+    constructor(F:boolean,a:number,b:number,c:number,d:number,lineW:number,Oc:string,Fc?:string){
+        this.F=F;
         this.type="line";
-        this.x=0;
-        this.y=0;
-        this.m=0;
-        this.n=0;
-        this.lineWidth=0;
-        this.Ocolor="black";
-        this.Fcolor="black";
+        this.x=a;
+        this.y=b;
+        this.m=c;
+        this.n=d;
+        this.lineWidth=lineW;
+        this.Ocolor=Oc;
+        this.Fcolor=Fc||"";
     }
     isNearFirstPoint(a:number,b:number,tolerance:number){
         if(circle.getDistance(a,b,this.x,this.y)<=tolerance+this.lineWidth){
